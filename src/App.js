@@ -1,30 +1,24 @@
 import React from 'react'
-import {Route} from 'react-router-dom'
-import BookList from './BookList'
+import { Route } from 'react-router-dom'
 import './App.css'
-import BookSearch from "./BookSearch";
-import * as BooksAPI from "./BooksAPI";
+import BookList from './BookList'
+import SearchBook from './SearchBook'
+import * as BooksAPI from "./utils/BooksAPI"
 
 class BooksApp extends React.Component {
-
   state = {
-    books:[],
-    updateCount:0
+    books:[]
   }
 
   updateBookInfo = () => {
-    BooksAPI.getAll().then((books) => {
-      this.setState({books})
-      this.setState(prevState => ({
-        updateCount: prevState.updateCount + 1
-      }))
+    BooksAPI.getAll().then((book) =>{
+      this.setState({books:book})
     })
   }
 
   componentDidMount() {
-    BooksAPI.getAll().then((books) => {
-      this.setState({books});
-      console.log(books)
+    BooksAPI.getAll().then((book) => {
+      this.setState({books:book})
     })
   }
 
@@ -32,15 +26,19 @@ class BooksApp extends React.Component {
     return (<div className="app">
         <Route exact path="/" render={() => {
           return (
-              <BookList books={this.state.books} updateBookInfo={this.updateBookInfo}/>)
+            <BookList
+              books = {this.state.books}
+              updateBookInfo = {this.updateBookInfo}
+            />
+          )
         }}/>
         <Route path="/search" render={() => {
           return (
-              <BookSearch updateBookInfo={this.updateBookInfo}/>)
+            <SearchBook updateBookInfo = {this.updateBookInfo}/>
+          )
         }}/>
       </div>)
-
   }
-  }
+}
 
 export default BooksApp
